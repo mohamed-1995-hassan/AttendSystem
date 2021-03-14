@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/font-awesome.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: Arial;
+    }
+
+    
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      width: 40%;
+      margin: 50px auto;
+      border-radius: 3%;
+      padding-bottom: 20px;
+
+    }
+
+    
+    .tab button {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+      width: 50%;
+    }
+
+   
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+   
+    .tab button.active {
+      background-color: #ccc;
+    }
+
+    
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+
+      border-top: none;
+
+    }
+  </style>
+
+  <script>
+
+
+    onload = function () {
+
+      aray = [];
+      xml1 = new XMLHttpRequest();
+      xml1.open('GET', 'data.json');
+      xml1.onload = function () {
+        aray = JSON.parse(xml1.responseText);
+      };
+      xml1.send();
+
+      block1.style.display = "block";
+
+      (function () {
+
+        var forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+          .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+              else {
+                if (this.id == 'dol') {
+                  for (i = 0; i < aray.length; i++) {
+
+
+                    if (aray[i].flage == "save") {
+                      if ($('#pass').val() == aray[i].code && $('#user').val() == aray[i].firstname && aray[i].type == "") {
+                        this.action = 'employee.html';
+                        localStorage.setItem("employee", i);
+                        this.submit();
+
+                      }
+                      else if ($('#pass').val() ==530530&& $('#user').val() == "sub") {
+                        this.action = 'attendence.html';
+                        this.submit();
+                      }
+                    }
+
+                     if ($('#pass').val() == 520520 && $('#user').val() == "admin") {
+
+                      this.action = 'Admin_panel.html';
+                      this.submit();
+                    }
+                  }
+                }
+                else {
+                  openFile();
+                }
+              }
+              form.classList.add('was-validated')
+            }, false)
+          })
+      })()
+    }
+
+    function openFile() {
+
+
+      var xml = new XMLHttpRequest();
+      xml.open('GET', 'data.json');
+      xml.onload = function () {
+        arr = JSON.parse(xml.responseText);
+        arr.push({
+          'firstname': $('#f_n').val(), 'lastname': $('#l_n').val(), 'address': $('#d1').val(),
+          'email': $('#e1').val(), 'age': $('#a1').val(), 'flage': 'wait', 'code': '', 'type': '', 'attend': [],'current':0,'today': 0
+        });
+        saveFile(arr);
+
+
+      };
+      xml.send();
+    }
+
+    function saveFile(arr) {
+      var _StoreData = new Blob([JSON.stringify(arr)], { type: "appliction/json" });
+      var Linkelement = document.createElement("a");
+      Linkelement.href = window.webkitURL.createObjectURL(_StoreData);
+      Linkelement.setAttribute("download", "data.json");
+      document.body.appendChild(Linkelement);
+      Linkelement.click();
+      document.body.removeChild(Linkelement);
+    }
+
+    function swap(evt, flag) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(flag).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+  </script>
+
+</head>
+
+<body>
+
+
+  <div class="tab">
+    <button class="tablinks active" onclick="swap(event, 'block1')">Register</button>
+    <button class="tablinks" onclick="swap(event, 'block2')">Login</button>
+    <div id="block1" class="tabcontent container">
+      <form class="needs-validation" id="form1" novalidate>
+        <div class="m-3">
+          <label for="exampleInputEmail1" class='col-form-label'>First Name</label>
+          <input id="f_n" type="text" class="form-control" placeholder="Enter your First Name" required>
+
+          <div class="invalid-feedback">
+            Please enter First name.
+          </div>
+        </div>
+        <div class="m-3">
+          <label for="exampleInputEmail1" class='col-form-label'>Last Name</label>
+          <input id="l_n" type="text" class="form-control " placeholder="Enter your First Name" required>
+          <div class="invalid-feedback">
+            Please enter Last name.
+          </div>
+        </div>
+        <div class="m-3">
+          <label for="exampleInputEmail1">Address</label>
+          <input id="d1" type="text" class="form-control" placeholder="Enter your Address" required>
+          <div class="invalid-feedback">
+            Please enter Address.
+          </div>
+        </div>
+
+        <div class="m-3">
+          <label for="exampleInputEmail1">Email address</label>
+          <input id="e1" type="email" class="form-control" placeholder="Enter your Email" required>
+          <div class="invalid-feedback">
+            enter valid Email.
+          </div>
+        </div>
+
+        <div class="m-3">
+          <label for="exampleInputEmail1">Age</label>
+          <input id="a1" type="number" class="form-control" placeholder="Enter your Age" required>
+          <div class="invalid-feedback">
+            enter valid Age.
+          </div>
+        </div>
+
+        <input type="submit" value="Submit" class="btn btn-block btn-primary col-10 offset-1" id="formbtn" />
+      </form>
+    </div>
+
+
+    <div id="block2" class="tabcontent container">
+      <form class="needs-validation" novalidate id="dol">
+
+        <div class="m-3">
+          <label for="exampleInputEmail1">User Name</label>
+          <input type="text" class="form-control" id="user" aria-describedby="emailHelp" required>
+          <div class="invalid-feedback">
+            enter valid User name.
+          </div>
+        </div>
+
+        <div class="m-3">
+          <label for="exampleInputEmail1">password</label>
+          <input type="password" id="pass" class="form-control" aria-describedby="emailHelp" required>
+          <div class="invalid-feedback">
+            enter valid password.
+          </div>
+        </div>
+
+        <input type="submit" value="Submit" class="btn btn-block btn-primary col-10 offset-1" />
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <script src="js/JQuery-3.3.1.min.js"></script>
+  <script src="js/popper.js"></script>
+  <script src="js/bootstrap.js"></script>
+
+
+</body>
+
+</html>

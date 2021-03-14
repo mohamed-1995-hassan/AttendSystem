@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/font-awesome.css" rel="stylesheet" />
+<style>
+   
+   *{
+       margin: 0;
+       padding: 0;
+   }
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 55%;
+  margin: 50px auto;
+  border-radius: 3%;
+  height: 570px;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  width: 50%;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+ ;
+  border-top: none;
+  
+}
+
+#res{
+
+    width: 50%;
+    margin: 50px auto;
+    background-color: #f1f1f1;
+    border-radius: 5%;
+    display: none;
+    text-align: center;
+    padding: 15px;
+
+}
+
+.blocks{
+
+    background-color:#f1f1f1;
+    width: 50%;
+    margin: auto;
+    border-radius: 5%;
+    height: 250px;
+    text-align: center;
+    padding: 20px;
+}
+
+
+
+table tr th,td{
+
+  padding: 10px;
+  border:2px solid #f1f1f1;
+}
+table{
+
+  margin: 35px auto;
+}
+
+th{
+  background-color:#f1f1f1 ;
+}
+
+
+#all_waiting{
+
+width: 85%;
+height: 300px;
+background-color:#fff;
+margin: 60px auto;
+overflow-y: scroll;
+
+}
+
+#all_waiting::-webkit-scrollbar {
+    display: none;
+}
+
+#all_waiting {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+
+.fa-check::before{
+color:green;
+
+}
+
+.fa-check:hover{
+cursor: pointer;
+background-color: #fff;
+border-radius: 50%;
+
+}
+
+.div1{
+
+  width: 100%;
+   height: 180px;
+    background-color:#f1f1f1 ;
+    margin: 7px;
+    padding:20px;
+    text-align: left;
+
+}
+
+.bg,.b{
+
+  border-radius: 50%;
+}
+
+.b:active{
+
+  background-color: burlywood;
+}
+
+</style>
+
+<script>
+ 
+
+    onload=function(){
+      section1.style.display="block";
+        $(document).on('click','.bg',function(){
+
+       
+       Narr.splice(($(this).parents("div").index()),1);
+       draw();  
+        })
+
+        $(document).on('click','.b',function(){
+
+          
+
+          if(!($(this).hasClass('active')))
+          {
+           
+            this.className+=" active";
+        
+
+          }
+          else {
+            $(this).removeClass('active');
+            
+         
+          }
+        })
+
+
+        $(document).on('change','.ck',function(e){
+          if(this.checked)
+          {
+            Narr[$(this).parents("div").index()].type="sub_Admin";
+          }
+
+      })
+        $('#sve').click(function(){
+            flg=0;
+         
+         $.each($('.b'),function(key,vale){
+
+           if($(this).hasClass('active'))
+           {
+             
+             Narr[key].flage="save";
+             Narr[key].code=Math.floor(Math.random() * 899999 + 100000);
+             flg=1;
+           }
+
+         })
+        
+            if(flg==1)
+            {
+            Svd=Narr.concat(ARR);
+            var _StoreData = new Blob([JSON.stringify(Svd)], { type: "appliction/json" });
+            var Linkelement = document.createElement("a");
+            Linkelement.href = window.webkitURL.createObjectURL(_StoreData);
+            Linkelement.setAttribute("download", "data.json");
+            document.body.appendChild(Linkelement);
+            Linkelement.click();
+            document.body.removeChild(Linkelement);
+            }
+            else{alert('select item first');}
+        })
+
+          ajaxCall();
+
+          
+    }
+    function swap(evt, sawp_section) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(sawp_section).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+    function ajaxCall()
+       {
+
+        var xml=new XMLHttpRequest();
+        xml.open('GET','data.json');
+        xml.onload=function(){
+        arr=JSON.parse(xml.responseText);
+        newArr=handle();
+        draw();
+        draw1();
+        draw2();
+        draw3();
+        draw4();
+        draw5();
+        };
+        xml.send();   
+       }
+
+   function draw()
+   {
+
+    $('#all_waiting').html("");
+    
+    for(i=0;i<Narr.length;i++)
+        { 
+           
+         $('#all_waiting').append(`<div class='div1' >
+          <input type='button' value='delete' class='  bg btn btn-danger text-truncate m-2' style="float:right;" />
+          <input type='button' value='select' class='  b btn btn-primary text-truncate m-2 shadow-none' style="float:right;" />
+          <p class=" text-truncate">Full Name : ${Narr[i].firstname} ${Narr[i].lastname}</p>
+          <p class=" text-truncate">Age : ${Narr[i].age} years</p>
+          <p class=" text-truncate">Email : ${Narr[i].email}</p>
+          <span>Set as sub Admin : </span><input class="ck" type="checkbox"/>
+          </div>`)
+
+        }
+
+   }
+
+
+   function draw1()
+   {
+
+    for(i=0;i<ARR.length;i++)
+    {
+      if(ARR[i].attend.length!=0)
+      $('#table1').append(`<tr><td>${ARR[i].firstname}</td><td>${ARR[i].attend[(ARR[i].attend.length)-1].atnd}</td><td>${ARR[i].attend[(ARR[i].attend.length)-1].late}</td><td>${ARR[i].attend[(ARR[i].attend.length)-1].absent}</td></tr>`)
+    }
+
+   }
+
+   function draw2()
+   {
+
+    for(i=0;i<ARR.length;i++)
+    {
+      if(ARR[i].attend.length!=0)
+      $('#table2').append(`<tr><td>${ARR[i].firstname}</td><td>${ARR[i].attend[(ARR[i].attend.length)-1].atnd}</td></tr>`)
+    }
+
+   }
+
+   function draw3()
+   {
+
+    for(i=0;i<ARR.length;i++)
+    {
+      $('#table3').append(`<tr><td>${ARR[i].firstname} ${ARR[i].lastname} </td><td>${ARR[i].age}</td><td>${ARR[i].email}</td><td>${ARR[i].address}</td></tr>`)
+    }
+
+   }
+
+   function draw4()
+   {
+
+    for(i=0;i<ARR.length;i++)
+    {
+      if(ARR[i].attend.length!=0)
+      $('#table4').append(`<tr><td>${ARR[i].firstname}</td><td>${ARR[i].attend[(ARR[i].attend.length)-1].late}</td></tr>`)
+    }
+
+   }
+
+   function draw5()
+   {
+
+    for(i=0;i<ARR.length;i++)
+    {
+      if(ARR[i].attend.length!=0)
+      $('#table5').append(`<tr><td>${ARR[i].firstname}</td><td>${ARR[i].attend[(ARR[i].attend.length)-1].absent}</td></tr>`)
+    }
+
+   }
+
+
+   function handle()
+   {
+     Narr=[]
+     ARR=[]
+     for(j=0;j<arr.length;j++)
+     {
+       if(arr[j].flage=='wait')
+       {
+        Narr.push(arr[j]);
+       }
+       else{
+         ARR.push(arr[j]);
+       }
+     }
+   }
+
+    </script>
+
+</head>
+<body>
+
+
+<div class="tab ">
+  <div class="container">
+    <div class="row">
+
+  <button class="tablinks active col-2 text-truncate" onclick="swap(event, 'section1')">Full Report</button>
+  <button class="tablinks col-2 text-truncate" onclick="swap(event, 'section2')">Attendence</button>
+  <button class="tablinks col-2 text-truncate " onclick="swap(event, 'section3')">Information</button>
+  <button class="tablinks col-2 text-truncate" onclick="swap(event, 'section4')">Late</button>
+  <button class="tablinks col-2 text-truncate" onclick="swap(event, 'section5')">Absents</button>
+  <button class="tablinks col-2 text-truncate " onclick="swap(event, 'section6')">All Requsts</button>
+  
+
+</div>
+</div>
+
+  <div id="section1" class="tabcontent">
+
+<table id="table1" style="width: 80%;overflow-x:auto;">
+ <tr><th>Name</th><th>Atnd</th><th>Lat</th><th>Abs</th></tr> 
+
+
+
+
+</table>
+  </div>
+
+  <div id="section2" class="tabcontent">
+
+    <table id="table2" style="width: 80%;overflow-x:auto;">
+      <tr><th>Name</th><th>Atnd</th></tr>
+      </table>
+  </div>
+
+<div id="section3" class="tabcontent">
+
+  <table id="table3" style="width: 80%;overflow-x:auto;">
+    <tr><th>Name</th><th>Age</th><th>Email</th><th>Address</th></tr>
+    </table>
+  </div>
+
+  <div id="section4" class="tabcontent">
+
+    <table id="table4" style="width: 80%;overflow-x:auto;">
+      <tr><th>Name</th><th>Late</th></tr>
+      </table>
+  </div>
+
+  <div id="section5" class="tabcontent">
+    <table id="table5" style="width: 80%;overflow-x:auto;">
+      <tr><th>Name</th><th>Absent</th></tr>
+      </table>
+      
+  </div>
+
+  <div id="section6" class="tabcontent" style="text-align: center;">
+
+    <div id="all_waiting">
+
+    </div>
+
+    <input id="sve" type="button" value="Save All" class="btn btn-primary col-6"/>
+      
+  </div>
+ 
+</div>
+
+<script src="js/JQuery-3.3.1.min.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.js"></script>
+
+   
+</body>
+</html> 

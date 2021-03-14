@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="css/bootstrap.css" rel="stylesheet" />
+  <link href="css/font-awesome.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial;
+    }
+
+    
+    .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      width: 40%;
+      margin: 50px auto;
+      border-radius: 3%;
+      height: 570px; 
+    }
+
+    
+    .tab button {
+
+
+      border: none;
+      outline: none;
+
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+      width: 100%;
+    }
+
+    
+    .tab button:hover {
+      background-color: #ddd;
+    }
+
+    
+    .tab button.active {
+      background-color: #ccc;
+    }
+
+    
+    .tabcontent {
+
+      padding: 6px 12px;
+
+      border-top: none;
+
+    }
+
+    #res {
+
+      width: 50%;
+      margin: 50px auto;
+      background-color: #f1f1f1;
+      border-radius: 5%;
+      display: none;
+      text-align: center;
+      padding: 15px;
+
+    }
+
+    .blocks {
+
+      background-color: #f1f1f1;
+      width: 50%;
+      margin: auto;
+      border-radius: 5%;
+      height: 250px;
+      text-align: center;
+
+    }
+  </style>
+
+  <script>
+    
+
+    onload = function () {
+
+      aray = [];
+      xml1 = new XMLHttpRequest();
+      xml1.open('GET', 'data.json');
+      xml1.onload = function () {
+        aray = JSON.parse(xml1.responseText);
+        displayData(aray[localStorage.getItem("employee")]);
+        emp = aray[localStorage.getItem("employee")]
+      };
+      xml1.send()
+
+
+      document.getElementById("btw").addEventListener('click', function () {
+
+        $('#table2').html("");
+        if(emp.attend.length!=0) 
+        {
+
+        $('#table2').append(`<tr><td> Attendance Times :</td><td>${emp.attend[(emp.attend.length) - 1].atnd}</td></tr>
+            <tr><td>Late Time</td><td>${emp.attend[(emp.attend.length) - 1].late}</td></tr>
+             <tr><td>Absence Times:</td><td>${emp.attend[(emp.attend.length) - 1].absent}</td></tr>`)
+        }else{
+
+          alert("you still new person")
+        }
+      })
+
+      document.getElementById("btw2").addEventListener('click', function () {
+
+        $('#table3').html("");
+
+        if(emp.attend.length!=0)
+        {
+      
+        if(emp.today==1)
+        {
+          $('#table3').append(`<tr><td> Time Attend :</td><td>${emp.current}</td></tr>
+             <tr><td>status Time</td><td>${emp.attend[(emp.attend.length) - 1].late==1?'late':'early'}</td></tr>`)
+        }
+
+        else{
+              alert("not take your attendence");
+
+        }
+      }else{
+             alert("you still new person")
+
+      }
+      })
+
+    }
+
+
+    function displayData(emp) {
+      $('#table1').append(`<tr><td>full name : </td><td>${emp.firstname}  ${emp.lastname}</td></tr>
+     <tr><td>Email</td><td>${emp.email}</td></tr>
+     <tr><td>Age</td><td>${emp.age}</td></tr>`)
+
+    }
+
+
+
+    function personInfo(evt, con) {
+      var i, peri1, b11;
+      blocks = document.getElementsByClassName("blocks");
+      for (i = 0; i < blocks.length; i++) {
+        blocks[i].style.display = "none";
+      }
+      b11 = document.getElementsByClassName("b11");
+      for (i = 0; i < b11.length; i++) {
+        b11[i].className = b11[i].className.replace(" active", "");
+      }
+
+      document.getElementById(con).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+
+
+  </script>
+
+</head>
+
+<body>
+
+
+  <div class="tab">
+
+    <button class=" text-truncate ">personal Information</button>
+
+    <div id="Paris" class="tabcontent">
+
+
+      <div style="width: 100%;padding: 20px;margin: 100px auto;display: flex;">
+        <input type="button" class="btn btn-primary px-4 mx-1 text-truncate  active b11" value="Personal"
+          style="flex: 1;" onclick="personInfo(event,'con1')" />
+        <input type="button" id="btw" class="btn btn-primary px-4 mx-1 text-truncate  b11" value="Monthely Repo"
+          style="flex: 1;" onclick="personInfo(event,'con2')" />
+        <input type="button" id="btw2" class="btn btn-primary px-4 mx-1 text-truncate  b11" value="Dialy Repo"
+          style="flex: 1;" onclick="personInfo(event,'con3')" />
+
+      </div>
+
+      <div id="con1" class="blocks" style="padding: 25px;">
+        <table id="table1" style=" width: 100%; text-align: left;">
+
+
+
+
+        </table>
+
+
+      </div>
+      <div id="con2" class="blocks" style="display: none;  padding: 25px;">
+
+        <table id="table2" style=" width: 100%; text-align: left; margin-top: 20px; ">
+        </table>
+
+      </div>
+      <div id="con3" class="blocks" style="display: none; padding: 25px;">
+
+        <table id="table3" style=" width: 100%; text-align: left; margin-top: 20px;">
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/JQuery-3.3.1.min.js"></script>
+  <script src="js/popper.js"></script>
+  <script src="js/bootstrap.js"></script>
+
+
+</body>
+
+</html>
